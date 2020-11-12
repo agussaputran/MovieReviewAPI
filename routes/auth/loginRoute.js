@@ -7,7 +7,7 @@ const { checkPassword } = require('../../helper/bcryptHelper')
 const secret = process.env.JWT_SECRET
 
 
-app.post('/login', async (req, res, next) => {
+app.post('/auth/login', async (req, res, next) => {
   const username = req.body.username
   const password = req.body.password
   let user;
