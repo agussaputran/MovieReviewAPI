@@ -8,6 +8,8 @@ pushToServer:
   image: ubuntu
   script: 
     - which ssh || apt update && apt install -y ssh
+    - mkdir -p ~/.ssh
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
     - ssh -i '$SSH_KEY' $SSH_USERNAME@$SSH_ADDRESS "echo 'ini pesan dari malaikat server'"
 
 build: #job
