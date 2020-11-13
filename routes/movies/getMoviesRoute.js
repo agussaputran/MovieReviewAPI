@@ -8,12 +8,14 @@ app.use(passport.authenticate("bearer", { session: false }));
 
 app.get("/movies", async (req, res, next) => {
   const query = req.query;
-  const id = req.user.id;
-  query.userId = id;
   const result = await db.get("movies", query).catch((err) => {
     next(err);
   });
-  res.send(result);
+  if (result == "") {
+    res.status(404).send("data not found");
+  } else {
+    res.send(result);
+  }
 });
 
 app.use(routeErrorHandler);
