@@ -1,42 +1,46 @@
-const express = require('express')
-const app = express.Router()
-const db = require('../../controller/authOrCanUseGlobal/dbController')
-const { salt } = require('../../helper/bcryptHelper')
-const routeErrorHandler = require('../../middleware/errorMiddleware')
+const express = require("express");
+const app = express.Router();
+const db = require("../../controller/authOrCanUseGlobal/dbController");
+const { salt } = require("../../helper/bcryptHelper");
+const routeErrorHandler = require("../../middleware/errorMiddleware");
 
-app.post('/auth/register', async (req, res, next) => {
-  const username = req.body.username
-  const email = req.body.email
-  const password = req.body.password
+app.post("/auth/register", async (req, res, next) => {
+  const username = req.body.username;
+  const email = req.body.email;
+  const password = req.body.password;
 
-  const isUsernameExist = await db.get('users', { username })
-    .catch(err => {
-      next(err)
-    })
+  const isUsernameExist = await db.get("users", { username }).catch((err) => {
+    next(err);
+  });
+  const isEmailExist = await db.get("users", { email }).catch((err) => {
+    next(err);
+  });
   if (isUsernameExist && isUsernameExist.length) {
-    res.status(409).send('The same username has exist')
+    res.status(409).send("The username already in use");
+    return;
   }
-  const hashedPassword = await salt(password)
-    .catch(err => {
-      next(err)
-    })
+  if (isEmailExist && isEmailExist.length) {
+    res.status(409).send("The email already in use");
+    return;
+  }
+  const hashedPassword = await salt(password).catch((err) => {
+    next(err);
+  });
   const user = {
     username,
     email,
-    password: hashedPassword
-  }
-  const addUserResult = await db.add('users', user)
-    .catch(err => {
-      next(err)
-    })
+    password: hashedPassword,
+  };
+  const addUserResult = await db.add("users", user).catch((err) => {
+    next(err);
+  });
   if (addUserResult) {
-    res.send(addUserResult)
+    res.send(addUserResult);
   } else {
-    res.status(400).send('Wrong body')
+    res.status(400).send("Wrong body");
   }
-})
+});
 
+app.use(routeErrorHandler);
 
-app.use(routeErrorHandler)
-
-module.exports = app
+module.exports = app;
