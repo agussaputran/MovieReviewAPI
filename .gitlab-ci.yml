@@ -1,7 +1,5 @@
 stages:
   - push
-  - build
-  - start
 
 pushToServer:
   stage: push
@@ -12,13 +10,9 @@ pushToServer:
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
     - chmod 400 $SSH_KEY
     - ssh -i "$SSH_KEY" $SSH_USERNAME@$SSH_ADDRESS "
-    cd $CI_PROJECT_NAME &&
-    git pull &&
-    npm i"
+      cd $CI_PROJECT_NAME &&
+      git pull &&
+      npm i &&
+      pm2 restart server"
 
-build: #job
-  stage: build
-  image: ubuntu
-  script: 
-    - echo "Hello world"
 
