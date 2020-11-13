@@ -1,6 +1,0 @@
-MYSQL_PASSWORD="susuw123"
-MYSQL_DATABASE="movieReviews"
-MYSQL_USER="root"
-MYSQL_HOST="localhost"
-PORT="3000"
-JWT_SECRET="ini kode rahasia saya"
