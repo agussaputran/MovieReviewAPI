@@ -8,9 +8,11 @@ pushToServer:
   image: ubuntu
   script: 
     - which ssh || apt update && apt install -y ssh
+    - ssh -i '$SSH_KEY' $SSH_USERNAME@$SSH_ADDRESS "echo 'ini pesan dari malaikat server'"
 
 build: #job
   stage: build
   image: ubuntu
   script: 
     - echo "Hello world"
+
