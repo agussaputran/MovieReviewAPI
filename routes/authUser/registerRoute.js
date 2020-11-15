@@ -4,7 +4,7 @@ const db = require('../../controller/authOrCanUseGlobal/dbController')
 const { salt } = require('../../helper/bcryptHelper')
 const routeErrorHandler = require('../../middleware/errorMiddleware')
 
-app.post('/auth/register', async (req, res, next) => {
+app.post('/authUser/register', async (req, res, next) => {
   const username = req.body.username
   const email = req.body.email
   const password = req.body.password

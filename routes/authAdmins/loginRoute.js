@@ -7,23 +7,23 @@ const { checkPassword } = require('../../helper/bcryptHelper')
 const secret = process.env.JWT_SECRET
 
 
-app.post('/auth/login', async (req, res, next) => {
+app.post('/authAdmins/login', async (req, res, next) => {
   const username = req.body.username
   const password = req.body.password
-  let user;
+  let userAdmin;
 
-  const result = await db.get('users', { username })
+  const result = await db.get('userAdmins', { username })
     .catch(err => next(err))
   if (result.length) {
-    user = result[0]
-    const isPasswordMatch = await checkPassword(password, user.password)
+    userAdmin = result[0]
+    const isPasswordMatch = await checkPassword(password, userAdmin.password)
       .catch(err => next(err))
     if (isPasswordMatch) {
-      const token = jwt.sign(user, secret, {
-        expiresIn: '6h'
+      const token = jwt.sign(userAdmin, secret, {
+        expiresIn: '7d'
       })
-      user.token = token
-      res.send(user)
+      userAdmin.token = token
+      res.send(userAdmin)
     } else {
       res.status(401).send('Unauthorized')
     }
