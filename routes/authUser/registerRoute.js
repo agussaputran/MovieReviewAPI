@@ -14,7 +14,7 @@ app.post('/authUser/register', async (req, res, next) => {
       next(err)
     })
   if (isUsernameExist && isUsernameExist.length) {
-    res.status(409).send('The same username has exist')
+    return res.status(409).send('The same username has exist')
   }
   const hashedPassword = await salt(password)
     .catch(err => {
