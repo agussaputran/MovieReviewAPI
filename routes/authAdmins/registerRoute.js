@@ -25,12 +25,12 @@ app.post('/authAdmins/register', async (req, res, next) => {
     email,
     password: hashedPassword
   }
-  const addUserResult = await db.add('userAdmins', userAdmin)
+  const addUserAdminResult = await db.add('userAdmins', userAdmin)
     .catch(err => {
       next(err)
     })
-  if (addUserResult) {
-    res.send(addUserResult)
+  if (addUserAdminResult) {
+    res.send(addUserAdminResult)
   } else {
     res.status(400).send('Wrong body')
   }
