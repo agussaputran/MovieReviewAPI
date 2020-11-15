@@ -6,17 +6,10 @@ const routeErrorHandler = require('../../../middleware/errorMiddleware')
 
 app.use(passport.authenticate('bearer', { session: false }))
 
-app.post('/admin/movies', async (req, res, next) => {
+app.delete('/admin/movies', async (req, res, next) => {
     const id = req.body.id
 
-    const isMovieExist = await db.get('movies', { id })
-        .catch(err => {
-            next(err)
-        })
-    if (!isMovieExist) {
-        res.status(409).send('Movie not found')
-    }
-    const removeMovies = await db.add('movies', id)
+    const removeMovies = await db.remove('movies', id)
         .catch(err => {
             next(err)
         })

@@ -14,7 +14,7 @@ app.post('/admin/movies', async (req, res, next) => {
             next(err)
         })
     if (isMovieExist && isMovieExist.length) {
-        res.status(409).send('Oops! the movie already exist')
+        return res.status(409).send('Oops! the movie already exist')
     }
     const addMovies = await db.add('movies', req.body)
         .catch(err => {
