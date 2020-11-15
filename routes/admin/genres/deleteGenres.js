@@ -14,7 +14,7 @@ app.delete('/admin/genres', async (req, res, next) => {
             next(err)
         })
     if (removeGenre) {
-        res.send("Remove Actor Successfully")
+        res.send("Successfully Removing The Genre")
     }
 })
 

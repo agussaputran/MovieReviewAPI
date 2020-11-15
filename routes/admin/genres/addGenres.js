@@ -14,7 +14,7 @@ app.post('/admin/genres', async (req, res, next) => {
             next(err)
         })
     if (isGenreExists && isGenreExists.length) {
-        return res.status(409).send('Failed! Name Already Taken')
+        return res.status(409).send('Genre is already on the list')
     }
     const addGenre = await db.add('genres', req.body)
         .catch(err => {
