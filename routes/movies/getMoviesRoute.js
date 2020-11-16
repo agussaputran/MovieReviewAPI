@@ -11,11 +11,12 @@ app.get("/movies", async (req, res, next) => {
   const result = await db.get("movies", query).catch((err) => {
     next(err);
   });
+
   if (result == "") {
     res.status(404).send("data not found");
-  } else {
-    res.send(result);
+    return;
   }
+  res.send(result);
 });
 
 app.use(routeErrorHandler);
