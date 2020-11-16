@@ -13,9 +13,9 @@ app.get("/movies/search", async (req, res, next) => {
   });
   if (result == "") {
     res.status(404).send("data not found");
-  } else {
-    res.send(result);
+    return;
   }
+  res.send(result);
 });
 
 app.use(routeErrorHandler);
