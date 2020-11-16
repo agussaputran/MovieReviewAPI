@@ -11,6 +11,13 @@ app.post("/reviews/:movie_id", async (req, res, next) => {
   let userId = (body.userId = req.user.id);
   let movieId = (body.movie_id = req.params.movie_id);
 
+  let today = new Date();
+  let date =
+    today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
+  let time =
+    today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+  body.date = date + " " + time;
+
   const isMovieIdExist = await db
     .get("reviews", { movieId, userId })
     .catch((err) => {
