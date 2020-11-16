@@ -18,13 +18,13 @@ app.post("/reviews/:movie_id", async (req, res, next) => {
     today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
   body.date = date + " " + time;
 
-  const isMovieIdExist = await db
+  const isReviewed = await db
     .get("reviews", { movieId, userId })
     .catch((err) => {
       next(err);
     });
 
-  if (isMovieIdExist && isMovieIdExist.length) {
+  if (isReviewed && isReviewed.length) {
     res.status(409).send("you only can add one reviews");
     return;
   }
