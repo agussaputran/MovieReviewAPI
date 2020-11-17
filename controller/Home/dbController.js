@@ -2,12 +2,12 @@ const dbConn = require("../../connection/dbConnection")
 const _ = require('lodash')
 const humps = require('humps')
 
-function getLimitation(tableField, tableName, setting) {
-    let sql = `SELECT ${tableField} FROM ${tableName}
+function getPaginate(objectKey, tableName, setting) {
+    let query = `SELECT ${objectKey} FROM ${tableName}
     ${setting.order} ${setting.limit} ${setting.offset}`
 
     return new Promise((resolve, reject) => {
-        dbConn.query(sql, (err, result) => {
+        dbConn.query(query, (err, result) => {
             if (err) {
                 reject(err)
             } else {
@@ -21,12 +21,12 @@ function getLimitation(tableField, tableName, setting) {
     })
 }
 
-// 'SELECT COUNT(*) as total FROM movie'
-function countData(tableField, tableName) {
-    let sql = `SELECT COUNT(${tableField}) as total FROM ${tableName}`
+// we need some key from movies to get a number in movies database
+function countData(objectKey, tableName) {
+    let query = `SELECT COUNT(${objectKey}) as total FROM ${tableName}`
 
     return new Promise((resolve, reject) => {
-        dbConn.query(sql, (err, result) => {
+        dbConn.query(query, (err, result) => {
             if (err) {
                 reject(err)
             } else {
@@ -37,6 +37,6 @@ function countData(tableField, tableName) {
 }
 
 module.exports = {
-    getLimitation,
+    getPaginate,
     countData
 }
