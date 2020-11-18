@@ -20,7 +20,7 @@ function checkPassword(password, hash) {
             if (err)
                 reject(err)
             else
-                resolve(result)
+                resolve(hash)
         })
 
     });
