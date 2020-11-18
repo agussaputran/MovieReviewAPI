@@ -7,10 +7,10 @@ const errorMiddleware = require("../../middleware/errorMiddleware");
 
 app.use(passport.authenticate("bearer", { session: false }));
 
-app.post("/reviews/:movie_id", async (req, res, next) => {
+app.post("/reviews", async (req, res, next) => {
   let body = req.body;
   let userId = (body.userId = req.user.id);
-  let movieId = (body.movie_id = req.params.movie_id);
+  let movieId = body.movieId;
   body.date = inserNowDate();
 
   const isReviewed = await db
