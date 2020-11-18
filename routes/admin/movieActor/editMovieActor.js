@@ -6,7 +6,7 @@ const routeErrorHandler = require('../../../middleware/errorMiddleware')
 
 app.use(passport.authenticate('bearer', { session: false }))
 
-app.patch('/movieActor', async (req, res, next) => {
+app.patch('/admin/movieActor', async (req, res, next) => {
     const id = req.body.id
     const body = req.body
 
