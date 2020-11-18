@@ -1,11 +1,23 @@
 require('dotenv').config()
+const cors = require('cors')
 console.log(process.env.PORT);
 
 const express = require('express')
 const bodyParser = require('body-parser')
 
 const app = express()
+const corsOptionsDelegate = function (req, callback) {
+  let corsOptions;
+  if (["http://localhost"].indexOf(req.header("Origin")) !== -1) {
+    corsOptions = { origin: true }
+  } else {
+    corsOptions = { origin: false }
+  }
+  callback(null, corsOptions)
+}
+app.use(cors(corsOptionsDelegate))
 app.use(bodyParser.json())
+app.use('/files', express.static('uploads'))
 
 /**
  * ⚠️ Propietary code! Do not change! ⚠️
