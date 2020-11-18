@@ -15,6 +15,7 @@ const corsOptionsDelegate = function (req, callback) {
   }
   callback(null, corsOptions)
 }
+
 app.use(cors(corsOptionsDelegate))
 app.use(bodyParser.json())
 app.use('/files', express.static('uploads'))
