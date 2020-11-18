@@ -2,8 +2,11 @@ const dbConn = require("../../connection/dbConnection")
 const _ = require('lodash')
 const humps = require('humps')
 
-function getPaginate(objectKey, tableName, setting) {
-    let query = `SELECT ${objectKey} FROM ${tableName}
+function getPaginate(setting) {
+    let query = `SELECT id, title, poster, g.name FROM movies m 
+                JOIN movieGenre mg ON mg.movies_id = m.id 
+                JOIN genres g ON mg.genre_id = g.id
+
     ${setting.order} ${setting.limit} ${setting.offset}`
 
     return new Promise((resolve, reject) => {

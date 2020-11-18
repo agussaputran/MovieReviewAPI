@@ -7,7 +7,6 @@ const mysqlErrorHandler = require('../middleware/errorMiddleware')
 
 app.get('/home', paginate.middleware(10, 15), async (req, res, next) => {
     const offset = (req.query.page - 1) * req.query.limit
-    const ojectKeys = "title, poster"
     const id = "movies.id"
     const config = {
         order: 'ORDER BY title',
@@ -15,7 +14,7 @@ app.get('/home', paginate.middleware(10, 15), async (req, res, next) => {
         offset: `offset ${offset}`
     }
 
-    const result = await db.getPaginate(ojectKeys, 'movies', config)
+    const result = await db.getPaginate(config)
         .catch((err) => next(err))
     const itemCount = await db.countData(id, 'movies')
         .catch((err) => next(err))
