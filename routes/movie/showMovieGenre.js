@@ -7,16 +7,16 @@ const passport = require('../../middleware/authorizationMiddleware')
 
 app.use(passport.authenticate('bearer', { session: false }))
 
-app.get('/movies/searchByGenre', async (req, res, next) => {
-    const genre = req.body.genre
+app.get('/movieGenre', async (req, res, next) => {
+    const title = req.body.title
 
-    const result = await db.getGenre(genre)
+    const result = await db.showGenre(title)
         .catch((err) =>
             next(err))
     if (result.length > 0) {
         res.send(result)
     } else {
-        res.status(404).send('Movies not found')
+        res.status(404).send('Genre not found')
     }
 })
 
