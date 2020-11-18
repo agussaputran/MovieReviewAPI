@@ -101,6 +101,44 @@ function getSearch(tableName, searchParameters) {
   });
 }
 
+function getReviewsFromUser(userId) {
+  let query = `SELECT r.id, r.review_title, r.review, review, r.rate, r.date, m.title
+  FROM reviews r JOIN movies m ON m.id = r.movie_id
+  WHERE r.user_id = "${userId}" ORDER BY date DESC`;
+  return new Promise((resolve, reject) => {
+    db.query(query, (err, result) => {
+      if (err) reject(err);
+      else
+        resolve(
+          result.map((res) => {
+            const plainObject = _.toPlainObject(res);
+            const camelCaseObject = humps.camelizeKeys(plainObject);
+            return camelCaseObject;
+          })
+        );
+    });
+  });
+}
+
+function getReviewsFromUserWithTitle(userId, movieTitle) {
+  let query = `SELECT r.id, r.review_title, r.review, review, r.rate, r.date, m.title
+  FROM reviews r JOIN movies m ON m.id = r.movie_id
+  WHERE r.user_id = "${userId}" AND m.title LIKE "%${movieTitle}%" ORDER BY date DESC`;
+  return new Promise((resolve, reject) => {
+    db.query(query, (err, result) => {
+      if (err) reject(err);
+      else
+        resolve(
+          result.map((res) => {
+            const plainObject = _.toPlainObject(res);
+            const camelCaseObject = humps.camelizeKeys(plainObject);
+            return camelCaseObject;
+          })
+        );
+    });
+  });
+}
+
 function add(tableName, body) {
   const id = uuidv4();
   body.id = id;
@@ -149,6 +187,8 @@ function remove(tableName, id) {
 module.exports = {
   get,
   getSearch,
+  getReviewsFromUser,
+  getReviewsFromUserWithTitle,
   add,
   edit,
   remove,
