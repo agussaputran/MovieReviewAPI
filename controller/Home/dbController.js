@@ -3,8 +3,8 @@ const _ = require('lodash')
 const humps = require('humps')
 
 function getPaginate(setting) {
-    let query = `SELECT id, title, poster, g.name FROM movies m 
-                JOIN movieGenre mg ON mg.movies_id = m.id 
+    let query = `SELECT m.id, m.title, m.poster, g.name FROM movies m 
+                JOIN movieGenre mg ON m.id = mg.movies_id
                 JOIN genres g ON mg.genre_id = g.id
 
     ${setting.order} ${setting.limit} ${setting.offset}`
