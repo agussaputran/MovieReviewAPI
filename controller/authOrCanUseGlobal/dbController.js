@@ -81,11 +81,20 @@ function get(tableName, searchParameters) {
 }
 
 function getMovieDetail(movieId) {
-  let query = `SELECT movies.title, movies.poster, movies.trailer,
-  COUNT(reviews.review) as review_count ,
-  AVG(reviews.rate) as overall_rating FROM movies
-  JOIN reviews ON movies.id = reviews.movie_id
-  where movies.id = "${movieId}"`;
+  let query = `SELECT m.id m.title, m.poster, m.trailer, m.synopsis
+  COUNT(r.review), AVG(r.rate), mi.release_date, mi.director, mi.budget, mi.featured_song, g.name
+  FROM movies m
+  LETF JOIN reviews r ON movies.id = reviews.movie_id
+  JOIN movieInfo mi ON mi.movies_id = r.movie_id
+  JOIN movieGenre mg ON mg.movies_id = mi.movies_id
+  JOIN genre g ON g.id = mg.genre_id
+  GROUP BY m.id
+  where m.id = "${movieId}"`;
+  // select id, title, genre.name, avg(reviews.rate) from movies
+  // LEFT JOIN reviews ON movies.id = reviews.movie_id
+  // JOIN movieGenre ON movies.id = movieGenre.movie_id
+  // JOIN genre  ON movieGenre.genre_id = genre.id
+  // GROUP BY id
 
   return new Promise((resolve, reject) => {
     db.query(query, (err, result) => {
@@ -214,4 +223,5 @@ module.exports = {
   add,
   edit,
   remove,
+  getMovieDetail,
 };
