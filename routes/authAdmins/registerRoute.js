@@ -17,6 +17,7 @@ app.post('/authAdmins/register', async (req, res, next) => {
     })
   if (isUsernameExist && isUsernameExist.length) {
     return res.status(409).send('The same username has exist')
+<<<<<<< HEAD
   }
   const isEmailExist = await db.get('userAdmins', { email })
     .catch(err => {
@@ -24,6 +25,8 @@ app.post('/authAdmins/register', async (req, res, next) => {
     })
   if (isEmailExist && isEmailExist.length) {
     return res.status(409).send('Email already used')
+=======
+>>>>>>> features--movie-by-admin
   }
   const hashedPassword = await salt(password)
     .catch(err => {
@@ -34,16 +37,21 @@ app.post('/authAdmins/register', async (req, res, next) => {
     email,
     password: hashedPassword
   }
-  const addUserResult = await db.add('userAdmins', userAdmin)
+  const addUserAdminResult = await db.add('userAdmins', userAdmin)
     .catch(err => {
       next(err)
     })
+<<<<<<< HEAD
   if (addUserResult) {
     const token = jwt.sign(addUserResult, secret, {
       expiresIn: '6h'
     })
     addUserResult.token = token
     res.send(addUserResult)
+=======
+  if (addUserAdminResult) {
+    res.send(addUserAdminResult)
+>>>>>>> features--movie-by-admin
   } else {
     res.status(400).send('Wrong body')
   }
