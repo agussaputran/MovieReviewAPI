@@ -4,7 +4,7 @@ const passport = require('../../../middleware/authorizationMiddleware')
 const { getUsers } = require('../../../controller/Users/userController')
 const app = express.Router()
 
-app.get('/user', passport.authenticate('bearer', { session: false }), async (req, res, next) => {
+app.get('/user/profile', passport.authenticate('bearer', { session: false }), async (req, res, next) => {
     let body = req.body
     const id = req.user.id
     body.id = id

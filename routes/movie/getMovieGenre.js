@@ -1,7 +1,7 @@
 const express = require('express')
 const paginate = require('express-paginate')
 const app = express.Router()
-const db = require('../../controller/movie/showMovieGenre')
+const db = require('../../controller/Movies/getMovieGenre')
 const mysqlErrorHandler = require('../../middleware/errorMiddleware')
 const passport = require('../../middleware/authorizationMiddleware')
 

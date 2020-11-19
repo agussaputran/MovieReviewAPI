@@ -8,7 +8,7 @@ const routeErrorHandler = require('../../../middleware/errorMiddleware')
 
 app.use(passport.authenticate('bearer', { session: false }))
 
-app.patch('/user', async (req, res, next) => {
+app.patch('/user/profile', async (req, res, next) => {
     const id = req.body.id
     const body = req.body
     const editUser = await db.editUsers('users', id, body)

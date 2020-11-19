@@ -25,16 +25,16 @@ app.get('/users/:user_id', async (req, res, next) => {
     const userId = req.params.user_id
     const body = req.body
     query.userId = body
-    console.log(body);
+    // console.log(body);
     const getUser = await db.getUsers('users', body)
         .catch((err) => next(err))
-        
+
     if (getUser.length) {
         res.status(200).send(getUser);
     } else {
         res.send("Data is not found");
     }
-    
+
 })
 
 app.use(routeErrorHandler)
