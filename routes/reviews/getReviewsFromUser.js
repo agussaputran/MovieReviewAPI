@@ -17,7 +17,7 @@ app.get("/reviews/user", async (req, res, next) => {
         next(err);
       });
     if (result.length == 0) {
-      res.status(404).send("DATA NOT FOUND");
+      res.status(404).send("ERR_DATA_NOT_FOUND");
       return;
     }
     res.send(result);
@@ -27,6 +27,10 @@ app.get("/reviews/user", async (req, res, next) => {
     const result = await db.getReviewsFromUser(userId).catch((err) => {
       next(err);
     });
+    if (result.length == 0) {
+      res.status(204).send("NO_CONTENT");
+      return;
+    }
     res.send(result);
     return;
   }

@@ -2,10 +2,10 @@ const express = require('express')
 const app = express.Router()
 const db = require('../controller/Users/userController')
 // const upload = require('../../helper/imageUploaderHelper')
-// const passport = require('../../middleware/authorizationMiddleware')
+const passport = require('../middleware/authorizationMiddleware')
 const routeErrorHandler = require('../middleware/errorMiddleware')
 
-// app.use(passport.authenticate('bearer', { session: false }))
+app.use(passport.authenticate('bearer', { session: false }))
 
 // get all user
 app.get('/users', async (req, res, next) => {

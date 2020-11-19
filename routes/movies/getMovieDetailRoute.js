@@ -7,22 +7,15 @@ const routeErrorHandler = require("../../middleware/errorMiddleware");
 app.use(passport.authenticate("bearer", { session: false }));
 
 app.get("/movies/detail", async (req, res, next) => {
-  // const query = req.query;
-  // const id = query.id;
-  const id = req.body.id
-
-  const result = await db.get("movies", id).catch((err) => {
-    next(err);
-  });
-
-  if (!result) {
-    res.status(404).send("data not found");
-    return;
-  }
+  const id = req.query.id;
 
   const getMovieDetail = await db.getMovieDetail(id).catch((err) => {
     next(err);
   });
+  if (getMovieDetail.length == 0) {
+    res.status(404).send("ERR_DATA_NOT_FOUND");
+    return;
+  }
   res.send(getMovieDetail);
 });
 

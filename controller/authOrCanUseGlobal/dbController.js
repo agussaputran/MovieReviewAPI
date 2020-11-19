@@ -80,24 +80,39 @@ function get(tableName, searchParameters) {
   });
 }
 
-function getMovieDetail(id) {
-  let sql = `SELECT m.title, m.poster, m.trailer, m.synopsis,
-  COUNT(reviews.review) as review_count, AVG(reviews.rate) as overall_rating, mi.release_date, mi.director, mi.budget, mi.featured_song, g.name
-  FROM movies m
-  JOIN reviews r ON m.id = r.movie_id
-  JOIN movieInfo mi ON m.id = mi.movies_id 
-  JOIN movieGenre mg ON m.id = mg.movies_id
-  JOIN genres g ON mg.genre_id = g.id
-  where m.id = "${id}"
-  GROUP BY g.name, m.title, m.synopsis, mi.director`;
-  //   // select id, title, genre.name, avg(reviews.rate) from movies
-  //   // LEFT JOIN reviews ON movies.id = reviews.movie_id
-  //   // JOIN movieGenre ON movies.id = movieGenre.movie_id
-  //   // JOIN genre  ON movieGenre.genre_id = genre.id
-  //   // GROUP BY id
+function getWithPagination(tableName, movieId, config) {
+  let query = `SELECT * FROM ${tableName} WHERE movie_id = "${movieId}"
+      ${config.order} ${config.limit} ${config.offset}`;
+  return new Promise((resolve, reject) => {
+    db.query(query, (err, result) => {
+      if (err) reject(err);
+      else
+        resolve(
+          result.map((res) => {
+            const plainObject = _.toPlainObject(res);
+            const camelCaseObject = humps.camelizeKeys(plainObject);
+            return camelCaseObject;
+          })
+        );
+    });
+  });
+}
+
+function getMovieDetail(movieId) {
+  let query = `SELECT movies.title, movies.poster, movies.trailer, synopsis,
+  COUNT(reviews.review) as review_count ,
+  AVG(reviews.rate) as overall_rating, movieInfo.release_date,
+  movieInfo.director, movieInfo.budget, movieInfo.featured_song, genres.name AS genre FROM movies
+  JOIN reviews ON movies.id = reviews.movie_id
+  JOIN movieInfo ON movies.id = movieInfo.movies_id
+  JOIN movieGenre ON movies.id = movieGenre.movies_id
+  JOIN genres ON movieGenre.genre_id = genres.id
+  where movies.id = "${movieId}"
+  GROUP BY genres.name, movieInfo.featured_song,
+  movieInfo.budget, movieInfo.director, movieInfo.release_date`;
 
   return new Promise((resolve, reject) => {
-    db.query(sql, (err, result) => {
+    db.query(query, (err, result) => {
       if (err) reject(err);
       else
         resolve(
@@ -219,9 +234,10 @@ module.exports = {
   get,
   getSearch,
   getReviewsFromUser,
+  getMovieDetail,
   getReviewsFromUserWithTitle,
+  getWithPagination,
   add,
   edit,
   remove,
-  getMovieDetail,
 };

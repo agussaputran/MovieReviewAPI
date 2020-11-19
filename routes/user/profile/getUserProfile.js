@@ -8,18 +8,8 @@ app.get('/user/profile', passport.authenticate('bearer', { session: false }), as
     let body = req.body
     const id = req.user.id
     body.id = id
-    // const username = req.body.username
-    // const password = req.body.password
-    // const photoProfile = req.body.photoProfile
 
-    // const user {
-    //     id,
-    //     username,
-    //     password,
-    //     email,
-    //     photoProfile
-    // }
-    const result = await getUsers('users', body)
+    const result = await getUsers('users', id)
         .catch(err => next(err))
     res.send(result)
 })

@@ -7,7 +7,7 @@ const routeErrorHandler = require('../../../middleware/errorMiddleware')
 app.use(passport.authenticate('bearer', { session: false }))
 
 app.delete('/user/profile', (req, res, next) => {
-    const id = req.body.id
+    const id = req.query.id
     db.removeUsers('users', id)
         .then(() => {
             res.send("Your account is successfully deleted")
