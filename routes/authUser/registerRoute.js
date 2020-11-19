@@ -17,7 +17,6 @@ app.post('/authUser/register', async (req, res, next) => {
     })
   if (isUsernameExist && isUsernameExist.length) {
     return res.status(409).send('The same username has exist')
-<<<<<<< HEAD
   }
   const isEmailExist = await db.get('users', { email })
     .catch(err => {
@@ -25,8 +24,6 @@ app.post('/authUser/register', async (req, res, next) => {
     })
   if (isEmailExist && isEmailExist.length) {
     return res.status(409).send('Email already used')
-=======
->>>>>>> features--movie-by-admin
   }
   const hashedPassword = await salt(password)
     .catch(err => {
