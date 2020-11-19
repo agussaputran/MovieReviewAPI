@@ -8,13 +8,13 @@ app.use(passport.authenticate('bearer', { session: false }))
 
 app.post('/admin/movieActor', async (req, res, next) => {
     const actorId = req.body.actorId
-    const moviesId = req.body.moviesId
+    const movieId = req.body.movieId
 
     const movieGenre = {
-        moviesId,
+        movieId,
         actorId
     }
-    const addMovieActor = await db.add('movieActor', movieGenre)
+    const addMovieActor = await db.add('movieActors', movieGenre)
         .catch(err => {
             next(err)
         })

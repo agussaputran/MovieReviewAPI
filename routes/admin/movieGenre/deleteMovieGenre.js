@@ -6,7 +6,7 @@ const routeErrorHandler = require('../../../middleware/errorMiddleware')
 
 app.use(passport.authenticate('bearer', { session: false }))
 
-app.delete('/movieGenres', async (req, res, next) => {
+app.delete('/admin/movieGenres', async (req, res, next) => {
     const id = req.body.id
 
     const delMovieGenre = await db.remove('movieGenre', id)

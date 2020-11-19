@@ -6,7 +6,7 @@ const routeErrorHandler = require('../../../middleware/errorMiddleware')
 
 app.use(passport.authenticate('bearer', { session: false }))
 
-app.post('/movieGenres', async (req, res, next) => {
+app.post('/admin/movieGenres', async (req, res, next) => {
     const genreId = req.body.genreId
     const moviesId = req.body.moviesId
 
