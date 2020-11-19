@@ -11,9 +11,10 @@ app.post('/authUser/register', async (req, res, next) => {
   const email = req.body.email
   const password = req.body.password
 
-  const isUsernameExist = await db.get("users", { username }).catch((err) => {
-    next(err);
-  });
+  const isUsernameExist = await db.get("users", { username })
+    .catch((err) => {
+      next(err);
+    });
 
   if (isUsernameExist && isUsernameExist.length) {
     return res.status(409).send('The same username has exist')
@@ -22,13 +23,15 @@ app.post('/authUser/register', async (req, res, next) => {
     .catch(err => {
       next(err)
     })
+
   if (isEmailExist && isEmailExist.length) {
     return res.status(409).send('Email already used')
   }
 
-  const hashedPassword = await salt(password).catch((err) => {
-    next(err);
-  });
+  const hashedPassword = await salt(password)
+    .catch((err) => {
+      next(err);
+    });
   const user = {
     username,
     email,
