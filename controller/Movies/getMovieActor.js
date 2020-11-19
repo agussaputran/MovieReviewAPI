@@ -4,7 +4,7 @@ const humps = require('humps')
 
 function getActor(title) {
     let sql = `SELECT name, photo FROM actors a
-                JOIN movieActor ma ON a.id = ma.actor_id 
+                JOIN movieActors ma ON a.id = ma.actor_id 
                 JOIN movies m ON ma.movie_id = m.id where title = "${title}"`
 
 
