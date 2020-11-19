@@ -7,6 +7,8 @@ function routeErrorHandler(err, req, res, next) {
     res.status(400).send('Bad request, data too long');
   else if (parsedError.code === 'ERR_NOT_FOUND')
     res.status(401).send('Not found');
+  else if (parsedError.code === 'ER_NO_REFERENCED_ROW_2')
+    res.status(401).send('Value Not found');
   else
     res.status(500).send(parsedError)
 }
