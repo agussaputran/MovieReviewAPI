@@ -82,10 +82,10 @@ function get(tableName, searchParameters) {
 
 function getMovieDetail(movieId) {
   let query = `SELECT movies.title, movies.poster, movies.trailer,
-  movies.review_count(SELECT COUNT(review) FROM reviews),
-  movies.overall_rating(SELECT AVG(rate) FROM reviews), overview.synopsis FROM movies
+  COUNT(reviews.review) as review_count ,
+  AVG(reviews.rate) as overall_rating FROM movies
   JOIN reviews ON movies.id = reviews.movie_id
-  JOIN overview ON movies.id = overview.movie_id`;
+  where movies.id = "${movieId}"`;
 
   return new Promise((resolve, reject) => {
     db.query(query, (err, result) => {
@@ -171,6 +171,7 @@ function remove(tableName, id) {
 module.exports = {
   get,
   getSearch,
+  getMovieDetail,
   add,
   edit,
   remove,
