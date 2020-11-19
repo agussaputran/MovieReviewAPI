@@ -42,8 +42,8 @@ app.post('/authAdmins/register', async (req, res, next) => {
     const token = jwt.sign(addUserAdminResult, secret, {
       expiresIn: '6h'
     })
-    addUserResult.token = token
-    res.send(addUserResult)
+    addUserAdminResult.token = token
+    res.send(addUserAdminResult)
   } else {
     res.status(400).send('Wrong body')
   }
