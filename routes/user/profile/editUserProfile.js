@@ -1,8 +1,6 @@
 const express = require('express')
-// const upload = require('../../../controller/Users/uploadPhotoController')
 const app = express.Router()
 const db = require('../../../controller/Users/userController')
-// const upload = require('../../../helper/imageUploaderHelper')
 const passport = require('../../../middleware/authorizationMiddleware')
 const routeErrorHandler = require('../../../middleware/errorMiddleware')
 
