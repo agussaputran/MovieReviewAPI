@@ -3,7 +3,7 @@ const _ = require('lodash')
 const humps = require('humps')
 
 function getGenre(genre) {
-    let sql = `SELECT title, poster, g.name FROM movies m 
+    let sql = `SELECT id, title, poster, g.name FROM movies m 
                 JOIN movieGenre mg ON mg.movies_id = m.id 
                 JOIN genres g ON mg.genre_id = g.id where name = "${genre}"`
 
