@@ -8,7 +8,7 @@ const passport = require('../../middleware/authorizationMiddleware')
 app.use(passport.authenticate('bearer', { session: false }))
 
 app.get('/movies/searchByGenre', async (req, res, next) => {
-    const genre = req.body.genre
+    const genre = req.query.genre
 
     const result = await db.getGenre(genre)
         .catch((err) =>

@@ -8,7 +8,7 @@ const passport = require('../../middleware/authorizationMiddleware')
 app.use(passport.authenticate('bearer', { session: false }))
 
 app.get('/movies/actors', async (req, res, next) => {
-    const title = req.body.title
+    const title = req.query.title
 
     const result = await db.getActor(title)
         .catch((err) =>
