@@ -4,7 +4,7 @@ const app = express.Router()
 const db = require('../controller/Home/dbController')
 const mysqlErrorHandler = require('../middleware/errorMiddleware')
 
-app.get('/home', paginate.middleware(10, 15), async (req, res, next) => {
+app.get('/home', paginate.middleware(8, 15), async (req, res, next) => {
     const offset = (req.query.page - 1) * req.query.limit
     const id = "movies.id"
     const config = {
