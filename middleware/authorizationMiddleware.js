@@ -5,6 +5,7 @@ const { Strategy } = require("passport-http-bearer");
 
 passport.use(
   new Strategy((token, done) => {
+    console.log(token)
     jwt.verify(token, secret, (err, decoded) => {
       if (err) {
         if (
