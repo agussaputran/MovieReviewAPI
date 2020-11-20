@@ -41,7 +41,7 @@ function createInsertColumns(object) {
 }
 
 function getUsers(tableName, searchParameters) {
-  let query = `SELECT id, username, email, photo_profile FROM ${tableName}`
+  let query = `SELECT id, username, email, photo_profile, password FROM ${tableName}`
   const searchParameterKeys = Object.keys(searchParameters)
   if (searchParameterKeys.length) {
     query += " WHERE " + chainWhere(searchParameters)

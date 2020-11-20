@@ -8,8 +8,7 @@ app.get('/user/profile', passport.authenticate('bearer', { session: false }), as
     let body = req.body
     const id = req.user.id
     body.id = id
-
-    const result = await getUsers('users', id)
+    const result = await getUsers('users', body)
         .catch(err => next(err))
     res.send(result)
 })
