@@ -11,6 +11,8 @@ https://gitlab.com/glintsxbinar_batch8-miniproject/team-g/teamg-backend
 ### Revised Purpose:
 this is the revised version from the original, in this version i want to refactoring all of the code with my programming style. and as an exercise for me in refactoring a project.
 
+and also for portfolio purposes
+
 ### Installation
 ```
 npm install
