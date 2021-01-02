@@ -56,7 +56,7 @@ function validateBody(body, isLoose) {
 
 class MovieController extends Controller {
   constructor(body) {
-    super("campaigns");
+    super("movies");
     this.body = body;
   }
 
