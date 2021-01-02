@@ -3,7 +3,7 @@ const app = express.Router();
 const routeErrorHandler = require("../../middleware/errorMiddleware");
 const UserController = require("../../controller/Users/userController");
 
-app.post("/authUser/login", async (req, res, next) => {
+app.post("/auth/login", async (req, res, next) => {
   try {
     const user = new UserController(req.body);
     await user.login();
