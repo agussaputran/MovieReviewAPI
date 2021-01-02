@@ -1,6 +1,6 @@
 const Controller = require("../mainController");
 const jwt = require("jsonwebtoken");
-const CustomError = require("../../");
+const CustomError = require("../../helper/customErrorHelper");
 const { salt, checkPassword } = require("../../helper/bcryptHelper");
 const Ajv = require("ajv");
 
