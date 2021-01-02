@@ -2,9 +2,9 @@ const Controller = require("../mainController");
 const CustomError = require("../../helper/customErrorHelper");
 const Ajv = require("ajv");
 const { cloneDeep } = require("lodash");
-const dayjs = require("dayjs");
+// const dayjs = require("dayjs");
 
-const ajv = new Ajv();
+const ajv = new Ajv.default({ allErrors: true });
 
 const strictSchema = {
   type: "object",
@@ -17,7 +17,7 @@ const strictSchema = {
     directorName: { type: "string", minLength: 1, maxLength: 90 },
     featuredSong: { type: "string", minLength: 1, maxLength: 90 },
     budget: { type: "string", minLength: 1, maxLength: 16 },
-    releaseDate: { type: "string", format: "date" },
+    releaseDate: { type: "string" },
   },
   required: [
     "title",
@@ -27,7 +27,6 @@ const strictSchema = {
     "directorName",
     "featuredSong",
     "budget",
-    "releaseDate",
   ],
   additionalProperties: false,
 };
@@ -51,9 +50,9 @@ function validateBody(body, isLoose) {
   }
 }
 
-function convertISODate(isoDate) {
-  return dayjs(isoDate).format("YYYY-MM-DD");
-}
+// function convertISODate(isoDate) {
+//   return dayjs(isoDate).format("YYYY-MM-DD");
+// }
 
 class MovieController extends Controller {
   constructor(body) {

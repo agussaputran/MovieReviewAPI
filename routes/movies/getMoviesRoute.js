@@ -1,23 +1,21 @@
 const express = require("express");
+const MovieController = require("../../controller/Movies/movieController");
 const app = express.Router();
-const db = require("../../controller/authOrCanUseGlobal/dbController");
 const passport = require("../../middleware/authorizationMiddleware");
 const routeErrorHandler = require("../../middleware/errorMiddleware");
 
-app.use(passport.authenticate("bearer", { session: false }));
-
-app.get("/movies", async (req, res, next) => {
-  const query = req.query;
-  const result = await db.get("movies", query).catch((err) => {
-    next(err);
-  });
-
-  if (result == "") {
-    res.status(404).send("data not found");
-    return;
+app.get(
+  "/movies",
+  passport.authenticate("bearer", { session: false }),
+  async (req, res, next) => {
+    try {
+      const movie = new MovieController(req.query).looseValidate();
+      res.status(200).send(await movie.find());
+    } catch (error) {
+      next(error);
+    }
   }
-  res.send(result);
-});
+);
 
 app.use(routeErrorHandler);
 
