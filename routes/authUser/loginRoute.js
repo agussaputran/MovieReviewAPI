@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express.Router();
 const routeErrorHandler = require("../../middleware/errorMiddleware");
+const UserController = require("../../controller/Users/userController");
 
 app.post("/authUser/login", async (req, res, next) => {
   try {
@@ -8,7 +9,7 @@ app.post("/authUser/login", async (req, res, next) => {
     await user.login();
 
     delete user.body.password;
-    res.send(user.body);
+    res.status(200).send(user.body);
   } catch (error) {
     next(error);
   }
