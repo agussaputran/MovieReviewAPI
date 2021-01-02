@@ -1,7 +1,6 @@
 const express = require("express");
 const app = express.Router();
 const db = require("../../controller/authOrCanUseGlobal/dbController");
-const inserNowDate = require("../../helper/inserDateHelper");
 const passport = require("../../middleware/authorizationMiddleware");
 const errorMiddleware = require("../../middleware/errorMiddleware");
 
@@ -11,7 +10,6 @@ app.post("/reviews", async (req, res, next) => {
   let body = req.body;
   let userId = (body.userId = req.user.id);
   let movieId = body.movieId;
-  body.date = inserNowDate();
 
   const isReviewed = await db
     .get("reviews", { movieId, userId })

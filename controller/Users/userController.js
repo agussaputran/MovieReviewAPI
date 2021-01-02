@@ -1,121 +1,87 @@
-const { v4: uuidv4 } = require('uuid');
-const db = require('../../connection/dbConnection')
-const _ = require('lodash')
-const humps = require('humps')
+const Controller = require("../mainController");
+const jwt = require("jsonwebtoken");
+const CustomError = require("../../helper/customErrorHelper");
+const { salt, checkPassword } = require("../../helper/bcryptHelper");
+const Ajv = require("ajv");
 
-function chainWhere(object) {
-  const parsedObject = humps.decamelizeKeys(object)
-  const parsedObjectKeys = Object.keys(parsedObject)
-  return parsedObjectKeys.map((objKey, index) => {
-    let value = parsedObject[objKey]
-    if (typeof value === 'string') {
-      value = `"${value}"`
-    }
-    let composedString = `${objKey} = ${value}`
-    if (index + 1 != parsedObjectKeys.length)
-      composedString += ' AND'
-    return composedString
-  }).join(' ')
-}
+const secret = process.env.JWT_SECRET;
 
-function chainSet(object) {
-  const parsedObject = humps.decamelizeKeys(object)
-  const parsedObjectKeys = Object.keys(parsedObject)
-  return parsedObjectKeys.map((objKey, index) => {
-    let value = parsedObject[objKey]
-    if (typeof value === 'string') {
-      value = `"${value}"`
-    }
-    let composedString = `${objKey} = ${value}`
-    return composedString
-  }).join(', ')
-}
+let ajv = new Ajv.default({ allErrors: true });
 
-function createInsertColumns(object) {
-  const parsedObject = humps.decamelizeKeys(object)
-  return {
-    columns: Object.keys(parsedObject).join(','),
-    values: Object.values(parsedObject).map(value =>
-      typeof value === 'string' ? `"${value}"` : value).join(',')
+const schema = {
+  type: "object",
+  properties: {
+    id: { type: "string", minLength: 1, maxLength: 36 },
+    name: { type: "string", minLength: 1, maxLength: 90 },
+    email: { type: "string", minLength: 1, maxLength: 90 },
+    password: { type: "string", minLength: 1, maxLength: 120 },
+    password: { type: "string", minLength: 1, maxLength: 255 },
+    isAdmin: { type: "boolean" },
+  },
+};
+
+const validator = ajv.compile(schema);
+
+function validateBody(body) {
+  const isValid = validator(body);
+  if (!isValid) {
+    throw new CustomError(
+      400,
+      "ERR_VALIDATION",
+      "Wrong body",
+      validator.errors.map((err) => `${err.dataPath} ${err.message}`).join()
+    );
   }
 }
 
-function getUsers(tableName, searchParameters) {
-  let query = `SELECT id, username, email, photo_profile, password FROM ${tableName}`
-  const searchParameterKeys = Object.keys(searchParameters)
-  if (searchParameterKeys.length) {
-    query += " WHERE " + chainWhere(searchParameters)
+class UserController extends Controller {
+  constructor(body) {
+    super("users");
+    this.body = body;
   }
-  return new Promise((resolve, reject) => {
-    db.query(query, (err, result) => {
-      if (err)
-        reject(err)
-      else
-        resolve(result.map(res => {
-          const plainObject = _.toPlainObject(res)
-          const camelCaseObject = humps.camelizeKeys(plainObject)
-          return camelCaseObject
-        }))
-    })
-  })
+  validate() {
+    validateBody(this.body);
+    return this;
+  }
+
+  async register() {
+    schema.required = ["name", "email", "password"];
+    this.validate();
+
+    this.body.isAdmin = false;
+    //this.body.photo = `${process.env.HOSTNAME}/files/default.jpg`;
+    const isEmailExist = await this.get({ email: this.body.email });
+    if (isEmailExist.length) {
+      throw new CustomError(409, "ER_DUP_ENTRY", "Email already registered");
+    }
+    this.body.password = await salt(this.body.password);
+    await this.add(this.body);
+    this.body.token = jwt.sign(this.body, secret, {
+      expiresIn: "6h",
+    });
+  }
+
+  async login() {
+    schema.required = ["email", "password"];
+    this.validate();
+
+    let user = await this.get({ email: this.body.email });
+    if (!user.length)
+      throw new CustomError(
+        404,
+        "ERR_UNAVAILABLE",
+        "Email has not been registered"
+      );
+    user = user[0];
+    const isPassMatch = await checkPassword(this.body.password, user.password);
+    if (!isPassMatch)
+      throw new CustomError(400, "ERR_PASS_NOT_MATCH", "Wrong password");
+    this.body.id = user.id;
+    this.body.isAdmin = user.isAdmin;
+    this.body.token = jwt.sign(this.body, secret, {
+      expiresIn: "6h",
+    });
+  }
 }
 
-function addUsers(tableName, body) {
-  const id = uuidv4()
-  body.id = id
-  const columnValue = createInsertColumns(body)
-  let query = `INSERT INTO ${tableName} (${columnValue.columns})
-  VALUES (${columnValue.values})`
-  return new Promise((resolve, reject) => {
-    db.query(query, (err) => {
-      if (err)
-        reject(err)
-      else
-        resolve(body)
-    })
-  })
-}
-
-function editUsers(tableName, id, body) {
-  let query = `UPDATE ${tableName}
-  SET ${chainSet(body)}
-  WHERE id="${id}"`
-  return new Promise((resolve, reject) => {
-    db.query(query, (err, result) => {
-      if (err)
-        reject(err)
-      else if (!result.affectedRows)
-        reject({
-          code: "ERR_NOT_FOUND"
-        })
-      else
-        resolve(body)
-    })
-  })
-}
-
-
-function removeUsers(tableName, id) {
-  let query = `DELETE FROM ${tableName}
-  WHERE id="${id}"`
-  return new Promise((resolve, reject) => {
-    db.query(query, (err, result) => {
-      if (err)
-        reject(err)
-      else if (!result.affectedRows)
-        reject({
-          code: "ERR_NOT_FOUND"
-        })
-      else
-        resolve(id)
-    })
-  })
-}
-
-
-module.exports = {
-  getUsers,
-  addUsers,
-  editUsers,
-  removeUsers
-}
+module.exports = UserController;
