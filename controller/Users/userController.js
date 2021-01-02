@@ -6,7 +6,7 @@ const Ajv = require("ajv");
 
 const secret = process.env.JWT_SECRET;
 
-const ajv = new Ajv();
+let ajv = new Ajv.default({ allErrors: true });
 
 const schema = {
   type: "object",
