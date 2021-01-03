@@ -2,7 +2,7 @@ const Controller = require("../mainController");
 const CustomError = require("../../helper/customErrorHelper");
 const Ajv = require("ajv");
 const { cloneDeep } = require("lodash");
-// const dayjs = require("dayjs");
+const dayjs = require("dayjs");
 
 const ajv = new Ajv.default({ allErrors: true });
 
@@ -50,9 +50,9 @@ function validateBody(body, isLoose) {
   }
 }
 
-// function convertISODate(isoDate) {
-//   return dayjs(isoDate).format("YYYY-MM-DD");
-// }
+function convertISODate(isoDate) {
+  return dayjs(isoDate).format("YYYY-MM-DD");
+}
 
 class MovieController extends Controller {
   constructor(body) {
@@ -76,6 +76,15 @@ class MovieController extends Controller {
       throw new CustomError(404, "ERR_NOT_FOUND", "DATA NOT FOUND");
     }
     return result;
+  }
+
+  async create() {
+    const result = await this.get(this.body);
+    if (result.length) {
+      throw new CustomError(409, "ERR_DUP_ENTRY", "DATA ALREADY EXIST");
+    }
+    this.body.releaseDate = convertISODate(this.body.releaseDate);
+    return this.add(this.body);
   }
 }
 
